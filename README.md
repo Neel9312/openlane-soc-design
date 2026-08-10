@@ -234,6 +234,8 @@ def read picorv32a.def
 
 **Final Layout after Placement (Standard cells snapped into rows):**
 ![Placement Layout](images/placement.png)
+**Legally Placed Components:**
+![Legally Placed Components](images/legally%20placed%20components%20.png)
 
 
 ## 📖 Day 3 — Design and Characterisation of Library Cells using Magic & ngspice
