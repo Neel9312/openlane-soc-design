@@ -110,12 +110,17 @@ prep -design picorv32a
 ```
 *Note: The `prep` command creates a new run directory tagged with the current date and time, and merges the technology LEF and cell LEF files into a single `merged.lef` file.*
 
+**Terminal State Before Synthesis:**
+![Before Synthesis](images/before%20synthesis.png)
+
 ### 3. Logic Synthesis
 With the design prepared, I ran logic synthesis using Yosys. This step translates the RTL (Verilog) into a logic gate-level netlist mapped to the Sky130 standard cell library.
 
 ```tcl
 run_synthesis
 ```
+**Synthesis Execution & Completion:**
+![After Synthesis](images/after%20synthesis.png)
 
 ### 4. Calculating the Flop Ratio
 After synthesis completed, I analyzed the generated netlist statistics in the terminal to determine the Flop Ratio. This ratio represents the proportion of D-Flip Flops (DFFs) relative to the total number of cells in the synthesized design.
@@ -125,6 +130,11 @@ The formulas used for this calculation are:
 $$ \text{Flop Ratio} = \frac{\text{Number of D Flip-Flops}}{\text{Total Number of Cells}} $$
 
 $$ \text{Percentage of DFFs} = \text{Flop Ratio} \times 100 $$
+
+**Finding the Total Number of Cells:**
+![Flop Ratio Total Cells](images/flop%20ratio1.png)
+**Finding the Number of D-Flip Flops (`sky130_fd_sc_hd__dfxtp_2`):**
+![Flop Ratio DFFs](images/flop%20ratio2.png)
 
 Based on my specific terminal output, I identified the following values:
 
