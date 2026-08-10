@@ -97,3 +97,115 @@ make mount
 
 # Launch the OpenLane flow in interactive mode
 ./flow.tcl -interactive
+
+### 2. Package Inclusion and Design Preparation
+Once inside the OpenLane interactive shell (`%` prompt), I loaded the required OpenLane packages and set up my specific design (`picorv32a`). 
+
+```tcl
+# Require the OpenLane package
+package require openlane 0.9
+
+# Prepare the picorv32a design
+prep -design picorv32a
+```
+*Note: The `prep` command creates a new run directory tagged with the current date and time, and merges the technology LEF and cell LEF files into a single `merged.lef` file.*
+
+### 3. Logic Synthesis
+With the design prepared, I ran logic synthesis using Yosys. This step translates the RTL (Verilog) into a logic gate-level netlist mapped to the Sky130 standard cell library.
+
+```tcl
+run_synthesis
+```
+
+### 4. Calculating the Flop Ratio
+After synthesis completed, I analyzed the generated netlist statistics in the terminal to determine the Flop Ratio. This ratio represents the proportion of D-Flip Flops (DFFs) relative to the total number of cells in the synthesized design.
+
+The formulas used for this calculation are:
+
+$$ \text{Flop Ratio} = \frac{\text{Number of D Flip-Flops}}{\text{Total Number of Cells}} $$
+
+$$ \text{Percentage of DFFs} = \text{Flop Ratio} \times 100 $$
+
+Based on my specific terminal output, I identified the following values:
+
+*   **Total Number of Cells:** 15,762
+*   **Number of D-Flip Flops (`sky130_fd_sc_hd__dfxtp_2`):** 1,613
+
+Plugging my values into the formula:
+
+$$ \text{Flop Ratio} = \frac{1613}{15762} = 0.1023347 $$
+
+This means my design has a **Flop Ratio of 10.23%**.
+
+
+---
+
+## 📖 Day 2 — Floorplanning and Introduction to Library Cells
+
+### Chip Floorplanning — Core Area and Utilisation
+Floorplanning is about deciding where everything goes on the chip. Two key parameters drive this:
+
+*   **Utilisation Factor** = `(Area occupied by Netlist) / (Total Core Area)`
+    *   A utilisation of 0.5-0.6 is typical — you want room for buffers, routing, etc.
+*   **Aspect Ratio** = `Height / Width of the core`
+    *   A ratio of 1 means a square; anything else is a rectangle.
+
+### Pre-Placed Cells and Decoupling Capacitors
+**Pre-placed cells** (like memories, PLLs, and complex IP blocks) are fixed in position before automated placement runs. Their location is determined manually based on connectivity and power intent.
+
+**Decoupling capacitors** are placed around pre-placed cells to act as local charge reservoirs — they compensate for voltage drops caused by switching activity and ensure these blocks see clean power.
+
+### Power Planning — Mesh vs Ring
+A good power grid uses both **power rings** around the core and a **power mesh** across the chip. Multiple VDD and VSS rails are distributed in both metal layers so that every standard cell has a nearby power tap, minimising IR drop and electromigration risk.
+
+### Pin Placement and Logical Cell Blockage
+Input and output pins are placed along the chip boundary. The relative placement of pins is guided by connectivity — a pin that drives logic deep in the core should be closer to that logic. The area between the core and the die boundary (I/O ring area) is blocked from automated cell placement to reserve it for pin buffers and ESD cells.
+
+### 🛠️ Lab — Floorplan and Placement
+### 1. Floorplanning and I/O Pin Placement
+During the floorplan stage, the default I/O pin placement was modified to cluster the pins together. By default, OpenLane sets the `FP_IO_MODE` to `1` (equidistant spacing). We overrode this global environment variable to `2` to stack the pins based on a specific algorithm.
+
+**Commands (inside OpenLane interactive shell):**
+
+```tcl
+# Modify the I/O pin placement mode
+set ::env(FP_IO_MODE) 2
+
+# Run the floorplan stage
+run_floorplan
+```
+
+**Viewing the Floorplan in Magic:**
+To verify the clustered pins visually, the layout is opened in Magic. *(Note: The LEF file must be read before the DEF file to prevent standard cell read errors).*
+
+```bash
+# Open a standard terminal and navigate to the OpenLane root
+cd ~/Desktop/OpenLane
+
+# Launch Magic from the results/floorplan directory
+magic -T /home/vscode/.ciel/sky130A/libs.tech/magic/sky130A.tech &
+
+# Inside the Magic tkcon console:
+lef read ../../tmp/merged.nom.lef
+def read picorv32a.def
+```
+
+### 2. Placement
+Following a successful floorplan, global and detailed placement are executed to assign physical coordinates to the standard cells (moving them out of the origin and into standard cell rows).
+
+**Command (inside OpenLane interactive shell):**
+
+```tcl
+run_placement
+```
+
+**Viewing Placement in Magic:**
+
+```bash
+# Launch Magic from the results/placement directory
+magic -T /home/vscode/.ciel/sky130A/libs.tech/magic/sky130A.tech &
+
+# Inside the Magic tkcon console:
+lef read ../../tmp/merged.nom.lef
+def read picorv32a.def
+```
