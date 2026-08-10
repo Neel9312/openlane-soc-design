@@ -80,3 +80,20 @@ Here is a breakdown of the specific tools OpenLANE uses under the hood for each 
 | **GDS Streaming** | Magic, KLayout |
 | **Timing Analysis** | OpenSTA |
 | **DRC & LVS (Physical Verification)** | Magic, Netgen |
+
+## 🛠️ Lab Session: Interactive OpenLane Flow & Synthesis
+
+To get hands-on with the flow, I needed to launch OpenLane in interactive mode. This allows for step-by-step execution and inspection of the design at each individual stage.
+
+### 1. Invoking the OpenLane Environment
+First, I navigated to the working directory, mounted the Docker container, and launched the tool.
+
+```bash
+# Navigate to the OpenLane directory
+cd ~/Desktop/OpenLane
+
+# Mount the Docker container
+make mount
+
+# Launch the OpenLane flow in interactive mode
+./flow.tcl -interactive
