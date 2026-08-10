@@ -305,23 +305,27 @@ nano sky130_inv.spice
 Edit the file so it matches this exact configuration:
 
 ```spice
+* SPICE3 file created from sky130_inv.ext - technology: sky130A
+
 .option scale=0.01u
 .include ./libs/pshort.lib
 .include ./libs/nshort.lib
 
-M0 Y A VGND VGND nshort_model.0 ad=1.435n pd=0.152m as=1.365n ps=0.148m w=35 l=23
-M1 Y A VPWR VPWR pshort_model.0 ad=1.443n pd=0.152m as=1.517n ps=0.156m w=37 l=23
+M1000 Y A VPWR VPWR pshort w=37 l=23
++ ad=1443 pd=152 as=1517 ps=156
+M1001 Y A VGND VGND nshort w=35 l=23
++ ad=1435 pd=152 as=1365 ps=148
 VDD VPWR 0 3.3V
 VSS VGND 0 0V
 Va A VGND PULSE(0V 3.3V 0 0.1ns 0.1ns 2ns 4ns)
-C0 Y VPWR 0.07318f
-C1 A VPWR 0.18935f
-C2 A Y 0.04263f
-C3 Y VGND 0.13947f
-C4 A VGND 0.2256f
-C5 VPWR VGND 0.64828f
+C0 A Y 0.05fF
+C1 Y VPWR 0.11fF
+C2 A VPWR 0.07fF
+C3 Y 0 0.24fF
+C4 VPWR 0 0.59fF
 
 .tran 1n 20n
+
 .control
 run
 .endc
