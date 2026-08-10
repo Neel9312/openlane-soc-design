@@ -190,7 +190,7 @@ To verify the clustered pins visually, the layout is opened in Magic. *(Note: Th
 
 ```bash
 # Open a standard terminal and navigate to the OpenLane root
-cd ~/Desktop/OpenLane
+cd ~/Desktop/OpenLane/designs/picorv32a/runs/RUN_2026.08.10_10.56.09/results/floorplan
 
 # Launch Magic from the results/floorplan directory
 magic -T /home/vscode/.ciel/sky130A/libs.tech/magic/sky130A.tech &
