@@ -228,3 +228,41 @@ magic -T /home/vscode/.ciel/sky130A/libs.tech/magic/sky130A.tech &
 lef read ../../tmp/merged.nom.lef
 def read picorv32a.def
 ```
+---
+
+## 📖 Day 3 — Design and Characterisation of Library Cells using Magic & ngspice
+
+### CMOS Inverter — SPICE Deck
+To characterise a standard cell, we write a SPICE netlist describing the PMOS and NMOS transistors along with their W/L ratios, supply voltage, input stimulus, and load capacitance.
+
+**Key parameters we extract from simulation:**
+*   **Rise time** — 20% to 80% of output rising edge
+*   **Fall time** — 80% to 20% of output falling edge
+*   **Propagation delay** — 50% input to 50% output
+
+### Detailed 16-Mask CMOS Fabrication Process
+The physical fabrication of a CMOS integrated circuit relies on 16 photolithography masks to define active regions, wells, gates, implants, contacts, and multi-layer interconnections:
+
+1. **Mask 1 — Active Region (Substrate / LOCOS):** Defines the active silicon regions where NMOS and PMOS transistors will be built, separating them using Local Oxidation of Silicon (LOCOS) or STI (Shallow Trench Isolation).
+2. **Mask 2 — N-Well:** Defines the N-well regions on the P-substrate to house the PMOS transistors.
+3. **Mask 3 — P-Well:** Defines the P-well regions (in a twin-tub process) to optimize NMOS threshold voltages.
+4. **Mask 4 — Polysilicon Gate Patterning:** Patterns the deposited polysilicon layer to form the gate electrodes for both NMOS and PMOS transistors.
+5. **Mask 5 — N- Select (Lightly Doped Drain - N- LDD):** Implants a low-concentration n-type dopant near the NMOS gate edges to mitigate hot-carrier effects.
+6. **Mask 6 — P- Select (Lightly Doped Drain - P- LDD):** Implants a low-concentration p-type dopant near the PMOS gate edges.
+7. **Mask 7 — N+ Source/Drain Implantation:** Defines and heavily implants the $N^+$ regions for the NMOS source/drain terminals and N-well body contacts.
+8. **Mask 8 — P+ Source/Drain Implantation:** Defines and heavily implants the $P^+$ regions for the PMOS source/drain terminals and P-substrate body contacts.
+9. **Mask 9 — Contact Vias (Contacts to Gate/Active):** Opens contact windows through the Inter-Level Dielectric (ILD) down to the polysilicon gates and $N^+/P^+$ active regions.
+10. **Mask 10 — Metal 1 Routing:** Patterns the first metal layer (Metal 1 / Local Interconnect) to connect internal standard cell transistors.
+11. **Mask 11 — Via 1:** Defines vertical connection cuts (Via 1) through the dielectric between Metal 1 and Metal 2 layers.
+12. **Mask 12 — Metal 2 Routing:** Patterns the second metal layer for inter-cell routing and distribution.
+13. **Mask 13 — Via 2:** Defines connection cuts (Via 2) between Metal 2 and higher-level metal layers.
+14. **Mask 14 — Metal 3 / Top Metal:** Patterns the upper metal layer, commonly used for global power ($V_{DD}$) and ground ($V_{SS}$) bus routing.
+15. **Mask 15 — Terminal / Pad Definition:** Opens access cuts through the top passivation layer to allow bonding wire connections to the I/O pads.
+16. **Mask 16 — Passivation / Protective Layer:** Patterns the final glass passivation layer ($Si_3N_4$ / $SiO_2$) to protect the entire die from moisture, mechanical damage, and contamination.
+
+### 🛠️ Lab — Cloning and Characterising a Custom Inverter Cell
+
+**Cloning the Standard Cell Repository**
+```bash
+git clone [https://github.com/nickson-jose/vsdstdcelldesign.git](https://github.com/nickson-jose/vsdstdcelldesign.git)
+```
