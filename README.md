@@ -21,7 +21,7 @@ As I dive into the world of physical design, I wanted to document my foundationa
 
 ---
 
-## 🧩 My Understanding of the Chip Package
+## My Understanding of the Chip Package
 
 When I look at an embedded board and point to the black square I usually call the "chip," I'm actually just looking at the **package**—the protective plastic or ceramic casing. The *real* silicon chip sits right in the centre of this package. It communicates with the outside world through **wire bonding**, which are incredibly tiny wires connecting the chip's internal pads to the pins I see on the outside of the package.
 
@@ -39,7 +39,7 @@ If I zoom into the chip itself, I can see how the layout is structured:
 
 ---
 
-## 🌉 From Software to Silicon: The ISA Bridge
+## From Software to Silicon: The ISA Bridge
 
 I find the transformation from a high-level program to physical hardware really fascinating. When a C program runs on a chip, it goes through a multi-layer transformation:
 
@@ -52,7 +52,7 @@ Ultimately, the system software stack (OS → Compiler → Assembler) acts as th
 
 ---
 
-## 🔓 Why Open-Source EDA is a Game Changer
+## Why Open-Source EDA is a Game Changer
 
 For a fully open-source ASIC design flow to exist, I learned that we need three critical components:
 1.  **RTL Designs:** Open-source hardware descriptions (like those found on opencores.org).
@@ -63,7 +63,7 @@ Historically, PDKs were closely guarded secrets distributed only under strict ND
 
 ---
 
-## ⚙️ OpenLANE and the Automated RTL to GDSII Flow
+## OpenLANE and the Automated RTL to GDSII Flow
 
 To bring my designs to life, I'm using **OpenLANE**. It's an automated, open-source flow that wraps around several EDA tools to take an RTL netlist all the way to a final GDSII layout file (the file you'd send to a foundry). 
 
@@ -81,7 +81,7 @@ Here is a breakdown of the specific tools OpenLANE uses under the hood for each 
 | **Timing Analysis** | OpenSTA |
 | **DRC & LVS (Physical Verification)** | Magic, Netgen |
 
-## 🛠️ Lab Session: Interactive OpenLane Flow & Synthesis
+## Lab Session: Interactive OpenLane Flow & Synthesis
 
 To get hands-on with the flow, I needed to launch OpenLane in interactive mode. This allows for step-by-step execution and inspection of the design at each individual stage.
 
@@ -150,7 +150,7 @@ This means my design has a **Flop Ratio of 10.23%**.
 
 ---
 
-## 📖 Day 2 — Floorplanning and Introduction to Library Cells
+## Day 2 — Floorplanning and Introduction to Library Cells
 
 ### Chip Floorplanning — Core Area and Utilisation
 Floorplanning is about deciding where everything goes on the chip. Two key parameters drive this:
@@ -171,7 +171,7 @@ A good power grid uses both **power rings** around the core and a **power mesh**
 ### Pin Placement and Logical Cell Blockage
 Input and output pins are placed along the chip boundary. The relative placement of pins is guided by connectivity — a pin that drives logic deep in the core should be closer to that logic. The area between the core and the die boundary (I/O ring area) is blocked from automated cell placement to reserve it for pin buffers and ESD cells.
 
-### 🛠️ Lab — Floorplan and Placement
+### Lab — Floorplan and Placement
 ### 1. Floorplanning and I/O Pin Placement
 During the floorplan stage, the default I/O pin placement was modified to cluster the pins together. By default, OpenLane sets the `FP_IO_MODE` to `1` (equidistant spacing). We overrode this global environment variable to `2` to stack the pins based on a specific algorithm.
 
@@ -238,7 +238,7 @@ def read picorv32a.def
 ![Legally Placed Components](images/legally%20placed%20components%20.png)
 
 
-## 📖 Day 3 — Design and Characterisation of Library Cells using Magic & ngspice
+## Day 3 — Design and Characterisation of Library Cells using Magic & ngspice
 
 ### CMOS Inverter — SPICE Deck
 To characterise a standard cell, we write a SPICE netlist describing the PMOS and NMOS transistors along with their W/L ratios, supply voltage, input stimulus, and load capacitance.
@@ -268,9 +268,74 @@ The physical fabrication of a CMOS integrated circuit relies on 16 photolithogra
 15. **Mask 15 — Terminal / Pad Definition:** Opens access cuts through the top passivation layer to allow bonding wire connections to the I/O pads.
 16. **Mask 16 — Passivation / Protective Layer:** Patterns the final glass passivation layer ($Si_3N_4$ / $SiO_2$) to protect the entire die from moisture, mechanical damage, and contamination.
 
-### 🛠️ Lab — Cloning and Characterising a Custom Inverter Cell
+### Lab — Cloning and Characterising a Custom Inverter Cell
 
-**Cloning the Standard Cell Repository**
+#### Step 1: Clone the Custom Cell Repository & Launch Magic
+Navigate to your OpenLane workspace, pull the custom cell repository, copy the technology file, and open the physical layout.
+
 ```bash
+cd ~/Desktop/OpenLane
 git clone [https://github.com/nickson-jose/vsdstdcelldesign.git](https://github.com/nickson-jose/vsdstdcelldesign.git)
+cd vsdstdcelldesign
+
+# Copy the Sky130 tech file into the local directory
+cp /home/vscode/.ciel/sky130A/libs.tech/magic/sky130A.tech .
+
+# Launch Magic to view the custom inverter layout
+magic -T sky130A.tech sky130_inv.mag &
+```
+
+#### Step 2: Extract the SPICE Netlist
+Once Magic and the white `tkcon` console window are open, run these commands inside the `tkcon` window to extract the parasitics and generate the netlist:
+
+```tcl
+extract all
+ext2spice cthresh 0 rthresh 0
+ext2spice
+```
+
+#### Step 3: Modify the SPICE Netlist (`sky130_inv.spice`)
+Head back to your terminal and open the generated netlist in `nano`:
+
+```bash
+nano sky130_inv.spice
+```
+
+Edit the file so it matches this exact configuration:
+
+```spice
+.option scale=0.01u
+.include ./libs/pshort.lib
+.include ./libs/nshort.lib
+
+M0 Y A VGND VGND nshort_model.0 ad=1.435n pd=0.152m as=1.365n ps=0.148m w=35 l=23
+M1 Y A VPWR VPWR pshort_model.0 ad=1.443n pd=0.152m as=1.517n ps=0.156m w=37 l=23
+VDD VPWR 0 3.3V
+VSS VGND 0 0V
+Va A VGND PULSE(0V 3.3V 0 0.1ns 0.1ns 2ns 4ns)
+C0 Y VPWR 0.07318f
+C1 A VPWR 0.18935f
+C2 A Y 0.04263f
+C3 Y VGND 0.13947f
+C4 A VGND 0.2256f
+C5 VPWR VGND 0.64828f
+
+.tran 1n 20n
+.control
+run
+.endc
+.end
+```
+
+#### Step 4: Run the Simulation and Plot Waveforms
+Execute the `ngspice` simulation engine on your modified netlist:
+
+```bash
+ngspice sky130_inv.spice
+```
+
+Once the simulation completes and drops you at the interactive prompt (`ngspice 1 ->`), type the plotting command to view your transient response waveforms:
+
+```spice
+plot y a
 ```
