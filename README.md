@@ -6,7 +6,11 @@ RTL-to-GDSII physical design flow using OpenLANE & Sky130 PDK | VSD SoC Design a
 
 > A 2-week hands-on workshop on complete RTL-to-GDSII flow for digital VLSI SoC design, organised by **VSD (VLSI System Design)** in collaboration with NASSCOM. This repository documents my learning, lab outputs, and key takeaways from each day.
 
+# Day 1: Exploring the Basics of SoC Design and Open-Source EDA
 
+As I dive into the world of physical design, I wanted to document my foundational understanding of how chips are actually built and the open-source tools that make this possible. Here are my key takeaways from getting started with the RTL-to-GDSII flow.
+
+---
 ## My Understanding of the Chip Package
 
 When I look at an embedded board and point to the black square I usually call the "chip," I'm actually just looking at the **package**—the protective plastic or ceramic casing. The *real* silicon chip sits right in the centre of this package. It communicates with the outside world through **wire bonding**, which are incredibly tiny wires connecting the chip's internal pads to the pins I see on the outside of the package.
