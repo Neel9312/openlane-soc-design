@@ -331,6 +331,7 @@ run
 .endc
 .end
 ```
+![Updated Spice](images/updated%20spice.png)
 
 #### Step 4: Run the Simulation and Plot Waveforms
 Execute the `ngspice` simulation engine on your modified netlist:
@@ -344,3 +345,49 @@ Once the simulation completes and drops you at the interactive prompt (`ngspice 
 ```spice
 plot y a
 ```
+![Spice Output](images/spice%20output.png)
+
+#### Step 5: Characterisation Parameters & Simulation Waveforms
+After executing the simulation in `ngspice`, the transient response waveforms are analyzed to extract precise timing metrics such as rise time, fall time, and cell propagation delay.
+
+**1. Rise Time Analysis (20% to 80%):**
+![Rise Time 20%](images/rt_20%25.png)
+![Rise Time 20% Value](images/rt_20%25%20val.png)
+![Rise Time 80%](images/rt%2080%25.png)
+![Rise Time 80% Value](images/rt%2080%25%20val.png)
+
+**2. Fall Time Analysis (80% to 20%):**
+![Fall Time 20%](images/fall%2020%25.png)
+![Fall Time 20% Value](images/fall%2020%25%20val.png)
+![Fall Time 80%](images/fall%2080%25.png)
+![Fall Time 80% Value](images/fall%2080%25%20val.png)
+
+**3. Propagation Delay Analysis (50% input to 50% output):**
+![Rise Delay 50%](images/raise%20delay%2050%25.png)
+![Rise Delay 50% Value](images/raise%20delay%2050%25%20val.png)
+![Fall Delay 50%](images/fall%20delay%2050%25.png)
+![Fall Delay 50% Value](images/fall%20delay%2050%25%20val.png)
+
+#### Timing Calculations from Simulation Waveforms
+
+From the waveform, measure rise time, fall time, and propagation delay values:
+
+* **Rise transition time calculation:**
+  * Time at 20% output (660 mV) = 2.16182 ns
+  * Time at 80% output (2.64 V) = 2.20323 ns
+  * **Rise transition time** = 2.20323 ns - 2.16182 ns = **0.04141 ns (or 41.41 ps)**
+
+* **Fall transition time calculation:**
+  * Time at 80% output (2.64 V) = 4.04000 ns
+  * Time at 20% output (660 mV) = 4.06819 ns
+  * **Fall transition time** = 4.06819 ns - 4.04000 ns = **0.02819 ns (or 28.19 ps)**
+
+* **Propagation delay calculation (Rise):**
+  * Input transition 50% time = 2.14993 ns
+  * Output transition 50% time = 2.18449 ns
+  * **Rise Propagation delay** = 2.18449 ns - 2.14993 ns = **0.03456 ns (or 34.56 ps)**
+
+* **Propagation delay calculation (Fall):**
+  * Input transition 50% time = 4.04882 ns
+  * Output transition 50% time = 4.05426 ns
+  * **Fall Propagation delay** = 4.05426 ns - 4.04882 ns = **0.00544 ns (or 5.44 ps)**
