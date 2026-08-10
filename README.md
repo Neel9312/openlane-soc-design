@@ -274,6 +274,13 @@ cp /home/vscode/.ciel/sky130A/libs.tech/magic/sky130A.tech .
 # Launch Magic to view the custom inverter layout
 magic -T sky130A.tech sky130_inv.mag &
 ```
+**Custom Inverter Layout View in Magic:**
+![cmos layout](images/layout%20cmos.png)
+
+**Inspecting Layout Selections:**
+![cmos layout](images/layout%20cmos%20select.png)<br>
+![cmos layout](images/layout%20cmos%20select1.png)<br>
+![cmos layout](images/layout%20select%202.png)
 
 #### Step 2: Extract the SPICE Netlist
 Once Magic and the white `tkcon` console window are open, run these commands inside the `tkcon` window to extract the parasitics and generate the netlist:
@@ -283,6 +290,8 @@ extract all
 ext2spice cthresh 0 rthresh 0
 ext2spice
 ```
+**Extraction Output in tkcon Console:**
+![Extraction tkcon](images/extraction%20tkcon.png)
 
 #### Step 3: Modify the SPICE Netlist (`sky130_inv.spice`)
 Head back to your terminal and open the generated netlist in `nano`:
@@ -290,6 +299,8 @@ Head back to your terminal and open the generated netlist in `nano`:
 ```bash
 nano sky130_inv.spice
 ```
+**Initial SPICE Netlist Generated Before Modifications:**
+![Terminal Before Changes](images/terminal%20before%20changes.png)
 
 Edit the file so it matches this exact configuration:
 
