@@ -217,7 +217,8 @@ Following a successful floorplan, global and detailed placement are executed to 
 ```tcl
 run_placement
 ```
-
+**Running Placement Step:**
+![Run Placement](images/run%20placement.png)
 **Viewing Placement in Magic:**
 
 ```bash
@@ -229,6 +230,11 @@ lef read ../../tmp/merged.nom.lef
 def read picorv32a.def
 ```
 ---
+![Placement tkcon Window](images/placement%20tkcon.png)
+
+**Final Layout after Placement (Standard cells snapped into rows):**
+![Placement Layout](images/placement.png)
+
 
 ## 📖 Day 3 — Design and Characterisation of Library Cells using Magic & ngspice
 
