@@ -202,6 +202,8 @@ def read picorv32a.def
 ![Magic tkcon Window](images/tkcon%20window.png)
 **Final Layout after Floorplanning (Showing clustered I/O pins):**
 ![Layout after Floorplanning](images/layout%20after%20floorplanning.png)
+**Clustered Components:**
+![Clustered Components](images/clustered.png)
 
 ### 2. Placement
 Following a successful floorplan, global and detailed placement are executed to assign physical coordinates to the standard cells (moving them out of the origin and into standard cell rows).
