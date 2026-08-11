@@ -391,3 +391,48 @@ From the waveform, measure rise time, fall time, and propagation delay values:
   * Input transition 50% time = 4.04882 ns
   * Output transition 50% time = 4.05426 ns
   * **Fall Propagation delay** = 4.05426 ns - 4.04882 ns = **0.00544 ns (or 5.44 ps)**
+
+### Lab — Analyzing Layout Errors and DRC Verification
+
+#### Step 1: Navigating and Inspecting the Test Directory
+First, we list the contents of the directory to verify the test files and lab archives containing intentionally modified or error-prone layouts.
+
+```bash
+tar xfz drc_tests.tgz
+cd drc_tests
+ls -la
+```
+
+**Directory Listing:**
+![Directory Listing](images/drc_tests_directory_listing.jpg.png)
+
+#### Step 2: Launching Magic with X11 Display
+We open the Magic layout tool using the X11 display driver to properly render the graphical interface and load the design files.
+
+```bash
+magic -d X11
+```
+
+**Magic Open File Dialog:**
+![Open File Dialog](images/magic_open_file_dialog.jpg.png)
+
+#### Step 3: Loading the Layout (`met3.mag`)
+We browse and load the `met3.mag` layout file inside the Magic environment to examine standard routing and layer structures.
+
+```bash
+# Within Magic GUI or command prompt:
+# File -> Open -> select met3.mag
+```
+
+**Loaded Layout View (`met3`):**
+![Met3 Layout Loaded](images/magic_met3_layout_loaded.jpg.png)
+
+#### Step 4: Running DRC Analysis and Checking Violations (`drc why`)
+To understand why specific layout errors or spacing violations are flagged by the tool, we query the error definitions interactively using the TkCon console.
+
+```tcl
+drc why
+```
+
+**DRC Verification & Error Analysis:**
+![DRC Why Verification](images/magic_drc_why_verification.jpg.png)
