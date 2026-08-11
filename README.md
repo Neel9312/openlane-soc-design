@@ -499,3 +499,33 @@ Following the CIF Boolean layer analysis, custom rules were written and integrat
 
 **11. Placing the N-Well Tap Contact**
 ![Placing the N-Well Tap Contact](images/Placing%20the%20N-Well%20Tap%20Contact.png)
+
+
+
+## Day 4 — Pre-Layout Timing Analysis and Clock Tree Synthesis
+
+### LEF Files and Standard Cell Port Guidelines
+Before integrating a custom cell into the OpenLANE flow, a valid LEF file is required to define its physical boundaries, pin locations, and metal layers. Standard cell port definitions must adhere to two critical rules:
+* All input and output ports must precisely align with the intersection of the horizontal and vertical routing tracks.
+* The cell's width and height must be odd multiples of the horizontal and vertical track pitches, respectively.
+
+### Static Timing Analysis (STA) Concepts
+STA is essential for verifying circuit timing before physical routing. The fundamental check for setup timing is:
+**Setup Slack = Data Required Time - Data Arrival Time** *(Slack must be ≥ 0)*
+
+To ensure a robust design, STA accounts for several key sources of uncertainty:
+* **OCV (On-Chip Variation):** Accounts for local process, voltage, and temperature variations across the die, modeled using specific derate factors.
+* **Clock Uncertainty:** Specific margins added to timing paths to account for expected clock jitter and skew.
+* **CRPR (Clock Reconvergence Pessimism Removal):** Eliminates artificial pessimism in timing reports when the launch and capture clock paths share common buffers.
+
+### Clock Tree Synthesis (CTS)
+The goal of CTS is to build a balanced distribution network of clock buffers to deliver the clock signal across the entire chip while minimizing skew. Crucial steps after running CTS include:
+* **Re-evaluating Hold Timing:** CTS physically inserts buffers into the design, adding real delay that can introduce new hold violations.
+* **Re-verifying Setup Timing:** The actual physical clock paths are now established (replacing ideal pre-layout clocks), requiring a final setup check.
+
+---
+
+### Lab — Custom Cell Integration and STA with OpenSTA
+
+Screenshot of tracks.info of sky130_fd_sc_hd:
+*(Add your screenshot image link here)*
