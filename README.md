@@ -436,3 +436,66 @@ drc why
 
 **DRC Verification & Error Analysis:**
 ![DRC Why Verification](images/magic_drc_why_verification.jpg.png)
+
+## Poly Resistor DRC Updates (poly.9)
+Updated the SkyWater 130nm technology file (`sky130A.tech`) to properly implement missing Design Rule Checks (DRC) for poly resistors. 
+
+**Key Changes:**
+* **P+ Poly Resistors (`xhrpoly`, `uhrpoly`):** Implemented a 480-unit spacing rule to all diffusion layers (`alldiff`) and all non-resistor poly layers (`allpolynonres`), logging a touching_illegal constraint.
+* **N+ Poly Resistors (`npres`):** Corrected a wildcard bug by changing the spacing constraint target from `*poly` to `allpolynonres`.
+* **Verification:** Successfully loaded the patched tech file into Magic VLSI and validated the custom `poly.9` error messages against the `poly.mag` test layout using the TkCon console.
+
+**1. Editing Poly Rules in Vim**
+![Editing Poly Rules in Vim](images/Editing%20Poly%20Rules%20in%20Vim.png)
+
+---
+
+## Poly Resistor DRC Verification & CIF Layer Analysis
+Following the `sky130A.tech` updates, physical verification was performed using Magic VLSI.
+
+**Lab Progress:**
+* **Test Structure Creation:** Utilized trackpad macros and the TkCon console to manually draw and copy poly resistor test structures in `poly.mag`.
+* **Layer Painting:** Applied `ndiff`, `pdiff`, and `nwell` layers to the canvas to isolate the components and test the new `alldiff` spacing constraints.
+* **DRC Validation:** Successfully cleared `poly.9` errors by manipulating block spacing and running `drc check`.
+* **CIF Boolean Layers:** Loaded `nwell.mag` to begin testing Deep N-Well rules, utilizing commands like `cif see dnwell_shrink` and `cif see nwell_missing` to visualize generated Boolean layers.
+
+**2. Initial Poly DRC Layout**
+![Initial Poly DRC Layout](images/Initial%20Poly%20DRC%20Layout.png)
+
+**3. Copying the Poly Resistors**
+![Copying the Poly Resistors](images/Copying%20the%20Poly%20Resistors.png)
+
+**4. Painting Diffusion and N-Well**
+![Painting Diffusion and N-Well](images/Painting%20Diffusion%20and%20N-Well.png)
+
+**5. Checking Poly DRC Errors**
+![Checking Poly DRC Errors](images/Checking%20Poly%20DRC%20Errors.png)
+
+**6. Poly Rule Verification Complete**
+![Poly Rule Verification Complete](images/Poly%20Rule%20Verification%20Complete.png)
+
+---
+
+## Custom DRC Rule Implementation: N-Well Taps
+Following the CIF Boolean layer analysis, custom rules were written and integrated into the PDK to strictly enforce well tap requirements.
+
+**Lab Progress:**
+* **Tech File Modification:** Edited `sky130A.tech` using Vim to define new `nwell_tapped` and `nwell_untapped` Boolean layers. 
+* **Custom DRC Rule:** Added a strict DRC rule within the `# NWELL` section to flag any N-Well missing a valid tap contact as a violation (`nwell.4`).
+* **Rule Activation:** Reloaded the technology file in Magic and executed `drc style drc(full)` to activate the newly written custom rules.
+* **Physical Verification:** Validated the rule by successfully triggering the `DRC=11` error on an isolated N-Well, and subsequently resolving the missing tap error by painting an N-Substrate Contact (`nsc`) inside the well.
+
+**7. Loading the N-Well Layout**
+![Loading the N-Well Layout](images/Loading%20the%20N-Well%20Layout.png)
+
+**8. Running CIF Boolean Commands**
+![Running CIF Boolean Commands](images/Running%20CIF%20Boolean%20Commands.png)
+
+**9. Adding N-Well Missing Tap Rule**
+![Adding N-Well Missing Tap Rule](images/Adding%20N-Well%20Missing%20Tap%20Rule.png)
+
+**10. Testing Full DRC Style**
+![Testing Full DRC Style](images/Testing%20Full%20DRC%20Style.png)
+
+**11. Placing the N-Well Tap Contact**
+![Placing the N-Well Tap Contact](images/Placing%20the%20N-Well%20Tap%20Contact.png)
