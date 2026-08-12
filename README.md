@@ -527,5 +527,27 @@ The goal of CTS is to build a balanced distribution network of clock buffers to 
 
 ### Lab — Custom Cell Integration and STA with OpenSTA
 
-Screenshot of tracks.info of sky130_fd_sc_hd:
-*(Add your screenshot image link here)*
+## Standard Cell LEF Generation & OpenLane Integration
+
+To ensure the custom `sky130_vsdinv` cell can be successfully routed by the automated place-and-route tools, its ports and boundaries were meticulously aligned to the standard routing grid before extraction and integration into the PicoRV32a design.
+
+### 1. Identifying Routing Grid Values
+![tracks.info output](images/xy%20values%20for%20grids.png)
+* Analyzed the `tracks.info` file within the `sky130_fd_sc_hd` PDK to extract the `li1` layer X and Y grid spacing (`0.46`, `0.34`) and offsets (`0.23`, `0.17`).
+
+### 2. Applying the Custom Grid in Magic
+![TkCon grid command](images/tkcon%20for%20grids.png)
+* Executed the custom grid parameters (`grid 0.46um 0.34um 0.23um 0.17um`) via the TkCon console to overlay the routing tracks onto the Magic workspace.
+
+### 3. Grid Alignment Verification
+![Inverter with grids overlaid](images/inverter%20with%20grids.png)
+* Visually verified that the input and output ports of the standard cell align precisely with the routing grid intersections to guarantee routing accessibility.
+
+### 4. Bounding Box Measurement
+![Cell width measurement](images/inverter%20distance.png)
+![TkCon box output](images/invetrer%20distance%20tkcon.png)
+* Utilized the `box` tool and console command to confirm the standard cell's width is an exact multiple of the X-grid pitch and the height matches the Y-grid boundaries. 
+
+### 5. Port Definition
+![Port configuration](images/inverter%20labelling.png)
+* Configured the `A` and `Y` labels as functional ports using Magic's `texthelper` GUI, enabling accurate LEF extraction for the synthesis tool.
