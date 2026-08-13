@@ -574,7 +574,6 @@ Zoomed-in view verifying standard cell abutment and the precise alignment of `VP
 ### 5. Custom Cell Internal Connectivity
 Expanded view (`expand` command) in Magic showing the internal metal layers and routing of the custom inverter cell.
 ![Internal Connectivity 1](images/day4_connectivity_1.png)
-![Internal Connectivity 2](images/day4_connectivity_2.png)
 
 ### 6. Clock Tree Synthesis (CTS)
 Execution of TritonCTS in the OpenLane flow to build the clock distribution network.
