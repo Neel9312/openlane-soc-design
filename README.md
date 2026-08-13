@@ -551,32 +551,34 @@ To ensure the custom `sky130_vsdinv` cell can be successfully routed by the auto
 ### 5. Port Definition
 ![Port configuration](images/inverter%20labelling.png)
 * Configured the `A` and `Y` labels as functional ports using Magic's `texthelper` GUI, enabling accurate LEF extraction for the synthesis tool.
+
+
 ## Day 4: Pre-Clock Tree Synthesis STA and Clock Tree Synthesis (CTS)
 
 ### 1. Custom Timing Constraints (SDC) Setup
 Creating the `my_base.sdc` file to manually define the clock period, I/O delays, driving cells, and output capacitive loads for precise timing analysis.
-![Custom SDC Configuration](day4_sdc_setup.png)
+![Custom SDC Configuration](images/day4_sdc_setup.png)
 
 ### 2. Pre-CTS Static Timing Analysis (STA)
 Configuration and execution of OpenSTA for pre-CTS timing sign-off, utilizing the custom SDC definitions.
-![Pre-CTS STA Setup](day4_pre_cts_sta.png)
+![Pre-CTS STA Setup](images/day4_pre_cts_sta.png)
 
 ### 3. Placement Visualization in Magic
 Full layout view of the `picorv32a` core after global and detailed placement.
-![Global Placement View](day4_placement_view.png)
+![Global Placement View](images/day4_placement_view.png)
 
 ### 4. Standard Cell Abutment and Power Rails
 Zoomed-in view verifying standard cell abutment and the precise alignment of `VPWR` and `VGND` rails.
-![Cell Abutment](day4_cell_abutment.png)
+![Cell Abutment](images/day4_cell_abutment.png)
 
 ### 5. Custom Cell Internal Connectivity
 Expanded view (`expand` command) in Magic showing the internal metal layers and routing of the custom inverter cell.
-![Internal Connectivity 1](day4_connectivity_1.png)
-![Internal Connectivity 2](day4_connectivity_2.png)
+![Internal Connectivity 1](images/day4_connectivity_1.png)
+![Internal Connectivity 2](images/day4_connectivity_2.png)
 
 ### 6. Clock Tree Synthesis (CTS)
 Execution of TritonCTS in the OpenLane flow to build the clock distribution network.
-![CTS Execution](day4_cts_execution.png)
+![CTS Execution](images/day4_cts_execution.png)
 
 ---
 
