@@ -624,3 +624,52 @@ Zoomed-in layout view showing the detailed physical routing tracks, via placemen
 Once detailed routing is complete, the physical wires introduce real-world electrical delays (resistance and capacitance). To ensure the design functions correctly:
 * These physical characteristics are extracted into a **SPEF (Standard Parasitic Exchange Format)** file.
 * The tool then back-annotates this realistic parasitic data into the netlist to perform a final **Post-Route STA**. This guarantees that the fully routed physical design still securely meets all setup and hold timing constraints before sign-off.
+
+### Common Routing Violations to Monitor:
+* **Minimum Spacing Violations:** Occurs when two wires on the same metal layer are placed closer than the foundry's minimum design rules allow.
+* **Antenna Violations:** Happens when excessively long metal traces accumulate static charge during the plasma etching process, which can discharge and permanently destroy the transistor's gate oxide.
+  * *Solution:* Resolve by inserting antenna diodes near the gate or utilizing jumper vias to transition the route to a higher metal layer.
+
+---
+
+## 🛠 Tools & Environment
+
+| Tool | Purpose |
+| :--- | :--- |
+| **OpenLANE** | Automated RTL-to-GDSII physical design flow |
+| **Yosys** | Logic synthesis and technology mapping |
+| **OpenROAD** | Floorplanning, Placement, CTS, and Global Routing |
+| **Magic** | VLSI Layout tool for DRC, LVS, and visual inspection |
+| **OpenSTA** | Static Timing Analysis (STA) for timing sign-off |
+| **ngspice** | Transistor-level SPICE simulation |
+| **TritonRoute** | Detailed physical routing |
+| **Netgen** | LVS (Layout vs. Schematic) checking |
+| **SkyWater 130nm** | Open-source foundry PDK (Process Design Kit) |
+
+---
+
+## 🧠 Key Learnings
+
+* Successfully navigated the complete RTL-to-GDSII physical design flow utilizing an entirely open-source ASIC toolchain.
+* Gained hands-on, practical experience executing floorplanning, power planning, standard cell placement, CTS, and routing for the `picorv32a` RISC-V processor core.
+* Mastered the characterization of custom standard cells (e.g., custom inverters) and their seamless integration into a larger automated physical design flow.
+* Deepened practical understanding of Static Timing Analysis (STA) constraints, including setup/hold slack, On-Chip Variation (OCV), and Clock Reconvergence Pessimism Removal (CRPR) using OpenSTA.
+* Analyzed the impact of real-world physical wire delays on timing sign-off through post-route SPEF (Standard Parasitic Exchange Format) extraction.
+
+---
+
+## 🙌 Acknowledgements
+
+A massive thank you to *Kunal Ghosh* (Co-founder, VSD Corp. Pvt. Ltd.) for curating such a well-structured, hands-on workshop. Taking a real RISC-V CPU from raw RTL all the way to a manufacturable GDSII layout using exclusively open-source tools has been an incredible learning experience. 
+
+* **Kunal Ghosh** — Co-founder, VSD (VLSI System Design)
+* **NASSCOM** — For facilitating this specialized workshop program
+
+---
+
+## 📚 References
+
+* [VSD SoC Design Workshop](https://www.vlsisystemdesign.com/)
+* [OpenLANE GitHub Repository](https://github.com/The-OpenROAD-Project/OpenLane)
+* [SkyWater Sky130 PDK](https://github.com/google/skywater-pdk)
+  
