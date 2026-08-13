@@ -551,3 +551,74 @@ To ensure the custom `sky130_vsdinv` cell can be successfully routed by the auto
 ### 5. Port Definition
 ![Port configuration](images/inverter%20labelling.png)
 * Configured the `A` and `Y` labels as functional ports using Magic's `texthelper` GUI, enabling accurate LEF extraction for the synthesis tool.
+## Day 4: Pre-Clock Tree Synthesis STA and Clock Tree Synthesis (CTS)
+
+### 1. Custom Timing Constraints (SDC) Setup
+Creating the `my_base.sdc` file to manually define the clock period, I/O delays, driving cells, and output capacitive loads for precise timing analysis.
+![Custom SDC Configuration](day4_sdc_setup.png)
+
+### 2. Pre-CTS Static Timing Analysis (STA)
+Configuration and execution of OpenSTA for pre-CTS timing sign-off, utilizing the custom SDC definitions.
+![Pre-CTS STA Setup](day4_pre_cts_sta.png)
+
+### 3. Placement Visualization in Magic
+Full layout view of the `picorv32a` core after global and detailed placement.
+![Global Placement View](day4_placement_view.png)
+
+### 4. Standard Cell Abutment and Power Rails
+Zoomed-in view verifying standard cell abutment and the precise alignment of `VPWR` and `VGND` rails.
+![Cell Abutment](day4_cell_abutment.png)
+
+### 5. Custom Cell Internal Connectivity
+Expanded view (`expand` command) in Magic showing the internal metal layers and routing of the custom inverter cell.
+![Internal Connectivity 1](day4_connectivity_1.png)
+![Internal Connectivity 2](day4_connectivity_2.png)
+
+### 6. Clock Tree Synthesis (CTS)
+Execution of TritonCTS in the OpenLane flow to build the clock distribution network.
+![CTS Execution](day4_cts_execution.png)
+
+---
+
+## Day 5: Final RTL to GDSII – Routing & Timing Sign-Off
+
+### The Two-Stage Routing Architecture
+In the OpenLane flow, physical routing is divided into two distinct phases to manage complexity:
+* **Global Routing (FastRoute):** The tool partitions the chip design into broader routing grids and calculates estimated, congestion-aware paths for all nets. It focuses on the macroscopic scale rather than exact physical design rules.
+* **Detailed Routing (TritonRoute):** Utilizing the rough guides established in the global phase, this step lays down the actual physical wire segments, vias, and metal layers. It ensures strict adherence to all foundry Design Rule Checks (DRC).
+
+### Lab Execution: Power Distribution & Routing
+To generate the power grid and physically route the standard cells, run the following commands within the OpenLane prompt:
+
+**1. Generate the Power Distribution Network (PDN):**
+```tcl
+gen_pdn
+```
+
+**2. Execute the Two-Stage Routing Process:**
+```tcl
+run_routing
+```
+
+### Routing Execution & Verification
+
+**1. Power Distribution Network (PDN) & Detailed Routing**
+Terminal output showing the successful execution of `gen_pdn` to build the power grid, followed by Global and Detailed Routing (`run_routing`).
+![PDN and Routing Execution](images/day5_pdn_routing.png)
+
+**2. Routing Results Extraction**
+Verification of the generated routing files (including the `.def` and `.odb` files) in the `results/routing/` directory.
+![Routing Results](images/day5_routing_results.png)
+
+**3. Fully Routed Design in Magic**
+Macro-level visualization of the completely routed `picorv32a` chip in Magic after `run_routing` completion.
+![Fully Routed Core](images/day5_fully_routed.png)
+
+**4. Detailed Routing & DRC Verification**
+Zoomed-in layout view showing the detailed physical routing tracks, via placements, and overlapping power distribution geometry.
+![Detailed Routing Zoom](images/day5_routing_zoom.png)
+
+### Parasitic Extraction & Post-Route STA
+Once detailed routing is complete, the physical wires introduce real-world electrical delays (resistance and capacitance). To ensure the design functions correctly:
+* These physical characteristics are extracted into a **SPEF (Standard Parasitic Exchange Format)** file.
+* The tool then back-annotates this realistic parasitic data into the netlist to perform a final **Post-Route STA**. This guarantees that the fully routed physical design still securely meets all setup and hold timing constraints before sign-off.
